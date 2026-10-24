@@ -1,0 +1,7 @@
+# No third-party runtime dependency is required by `core/` (standard library only).
+#
+# The Dify plugin runtime injects `dify_plugin` into the plugin container, so it is
+# intentionally NOT pinned here (pinning it would make the offline unit tests try
+# to download the SDK). The Dify model gateway adapter imports it lazily.
+#
+# See README.md § 已知限制 for what was and was not verified locally.
