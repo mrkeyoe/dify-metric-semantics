@@ -1,0 +1,63 @@
+identity:
+  name: resolve_metric
+  author: mrkeyoe
+  label:
+    en_US: Resolve Metric
+    zh_Hans: 解析指标口径
+
+description:
+  human:
+    en_US: Find every registered caliber (definition) that matches a metric mentioned in the user question, and flag whether they conflict.
+    zh_Hans: 根据用户问题中提到的指标名/别名，返回所有已注册口径，并标注这些口径是否互相冲突。
+  llm: >
+    Use this BEFORE writing SQL. Input the user query (and optionally a metric
+    hint). It returns candidate calibers with id, definition_text,
+    source_tables, sql_fragment, owner and confidence, plus a `conflict`
+    boolean and the reasons. If `conflict` is true you MUST call `arbitrate`
+    before generating SQL. This tool never executes SQL.
+
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: User query
+      zh_Hans: 用户问题
+    human_description:
+      en_US: The business question that mentions the metric, e.g. "last month's active users".
+      zh_Hans: 包含指标提法的业务问题，例如“上个月活跃用户数”。
+    llm_description: >
+      The original user question (or the phrase that mentions the metric).
+      Chinese metric names and aliases are matched after normalization.
+    form: llm
+
+  - name: metric_hint
+    type: string
+    required: false
+    label:
+      en_US: Metric hint
+      zh_Hans: 指标限定
+    human_description:
+      en_US: Optional extra hint to narrow the match, e.g. an owner team or an alias.
+      zh_Hans: 可选，进一步限定要匹配的指标（如别名或业务方名称）。
+    llm_description: Optional name or alias used to narrow the candidates when the query mentions several metrics.
+    form: llm
+
+  - name: top_k
+    type: number
+    required: false
+    default: 5
+    min: 1
+    max: 20
+    label:
+      en_US: Max candidates
+      zh_Hans: 最多候选数
+    human_description:
+      en_US: Maximum number of candidate calibers to return (1-20).
+      zh_Hans: 最多返回的候选口径数量（1-20）。
+    llm_description: Maximum number of candidates to return.
+    form: form
+
+extra:
+  python:
+    source: tools/resolve_metric.py

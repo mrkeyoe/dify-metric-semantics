@@ -1,0 +1,39 @@
+version: 0.1.0
+type: plugin
+author: mrkeyoe
+name: metric_semantics
+label:
+  en_US: Metric Semantics
+  zh_Hans: 指标语义与口径仲裁
+description:
+  en_US: >-
+    Register metric calibers, detect definition conflicts, and get a structured
+    arbitration decision before Text2SQL — so an agent never silently mixes two
+    different definitions of the same business metric.
+  zh_Hans: >-
+    在 Text2SQL 之前注册指标口径、检测口径冲突并给出结构化仲裁决策，
+    避免 Agent 把同一个业务指标的两种不同定义混用。
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/metric_semantics.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-10-24T00:00:00Z
+privacy: PRIVACY.md
+tags:
+  - productivity
+  - business
+  - data

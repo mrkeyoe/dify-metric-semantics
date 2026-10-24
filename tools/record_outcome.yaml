@@ -1,0 +1,82 @@
+identity:
+  name: record_outcome
+  author: mrkeyoe
+  label:
+    en_US: Record Outcome
+    zh_Hans: 回写执行结果
+
+description:
+  human:
+    en_US: Feed the actual query outcome back so the confidence of the used caliber moves via EMA.
+    zh_Hans: 把实际使用的口径与执行成功/失败信号回写，按 EMA 调整该口径的 confidence。
+
+  llm: >
+    Call this AFTER executing the query, with the caliber id you actually used
+    (chosen_id from arbitrate, or the id from resolve_metric) and whether it
+    worked. Use `outcome=success|failure` (or an explicit `signal` between 0 and
+    1). The tool returns old_confidence and new_confidence. This is how the
+    registry learns; it does not retrain any model.
+
+parameters:
+  - name: metric_id
+    type: string
+    required: true
+    label:
+      en_US: Caliber ID
+      zh_Hans: 口径 ID
+    human_description:
+      en_US: The caliber id that was actually used, e.g. "active_user.30d_order".
+      zh_Hans: 实际使用的口径 ID，例如 active_user.30d_order。
+    llm_description: The candidate id that was used in the executed query.
+    form: llm
+
+  - name: outcome
+    type: select
+    required: false
+    options:
+      - value: success
+        label:
+          en_US: Success
+          zh_Hans: 成功
+      - value: failure
+        label:
+          en_US: Failure
+          zh_Hans: 失败
+    label:
+      en_US: Outcome
+      zh_Hans: 执行结果
+    human_description:
+      en_US: Whether the query that used this caliber succeeded.
+      zh_Hans: 使用该口径的查询是否成功。
+    llm_description: success or failure of the executed query.
+    form: llm
+
+  - name: signal
+    type: number
+    required: false
+    min: 0
+    max: 1
+    label:
+      en_US: Signal (0-1)
+      zh_Hans: 信号（0-1）
+    human_description:
+      en_US: Optional numeric signal instead of outcome; 1 = full success, 0 = hard failure.
+      zh_Hans: 可选数值信号，替代 outcome；1 表示完全成功，0 表示彻底失败。
+    llm_description: Optional numeric reward in [0, 1] used instead of the outcome label.
+    form: form
+
+  - name: note
+    type: string
+    required: false
+    label:
+      en_US: Note
+      zh_Hans: 备注
+    human_description:
+      en_US: Optional short note, e.g. the SQL error that caused the failure.
+      zh_Hans: 可选备注，例如失败时的 SQL 报错摘要。
+    llm_description: Optional short human-readable note stored in the audit history.
+    form: llm
+
+extra:
+  python:
+    source: tools/record_outcome.py

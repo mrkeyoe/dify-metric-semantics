@@ -1,0 +1,86 @@
+identity:
+  name: arbitrate
+  author: mrkeyoe
+  label:
+    en_US: Arbitrate Caliber
+    zh_Hans: 口径仲裁
+
+description:
+  human:
+    en_US: Ask the model to judge which conflicting caliber should be used, and return a structured decision.
+    zh_Hans: 让模型判断冲突口径中应采用哪一个，返回结构化决策（是否定论、选中口径、理由、是否需人工）。
+  llm: >
+    Call this when resolve_metric reports a conflict. Provide either the
+    candidate ids returned by resolve_metric (`candidate_ids`, comma separated),
+    the whole candidate JSON array (`candidates_json`), or simply `query` to
+    re-resolve. The result is JSON: resolved, chosen_id, chosen_name, rationale,
+    requires_human, confidence, strategy. If requires_human is true you MUST stop
+    and ask the user which definition they mean. This tool never executes SQL.
+
+parameters:
+  - name: query
+    type: string
+    required: false
+    label:
+      en_US: User query
+      zh_Hans: 用户问题
+    human_description:
+      en_US: The original question; used to re-resolve candidates when ids are not provided.
+      zh_Hans: 原始问题；未提供候选时用它重新解析候选口径。
+    llm_description: Original user question. Used only when candidate_ids / candidates_json are absent.
+    form: llm
+
+  - name: candidate_ids
+    type: string
+    required: false
+    label:
+      en_US: Candidate IDs
+      zh_Hans: 候选口径 ID
+    human_description:
+      en_US: Comma-separated caliber ids from resolve_metric, e.g. "active_user.7d_login,active_user.30d_order".
+      zh_Hans: 逗号分隔的口径 ID，来自 resolve_metric 的 candidates[].id。
+    llm_description: Comma-separated candidate ids returned by resolve_metric.
+    form: llm
+
+  - name: candidates_json
+    type: string
+    required: false
+    label:
+      en_US: Candidates JSON
+      zh_Hans: 候选口径 JSON
+    human_description:
+      en_US: Optional JSON array of candidate objects (as returned by resolve_metric).
+      zh_Hans: 可选，resolve_metric 返回的候选对象数组（JSON 字符串）。
+    llm_description: A JSON array string of candidate objects. Prefer candidate_ids when possible.
+    form: llm
+
+  - name: context
+    type: string
+    required: false
+    label:
+      en_US: Extra context
+      zh_Hans: 补充上下文
+    human_description:
+      en_US: Optional business context (reporting period, owner, prior decisions) to help the judgment.
+      zh_Hans: 可选业务上下文（统计周期、归属团队、历史结论）帮助判断。
+    llm_description: Optional extra business context for the arbitration prompt.
+    form: llm
+
+  - name: confidence_threshold
+    type: number
+    required: false
+    default: 0.6
+    min: 0
+    max: 1
+    label:
+      en_US: Human threshold
+      zh_Hans: 人工确认阈值
+    human_description:
+      en_US: Below this model confidence the decision is flagged requires_human=true.
+      zh_Hans: 模型置信度低于该值时，强制 requires_human=true。
+    llm_description: Confidence threshold below which the decision must be confirmed by a human.
+    form: form
+
+extra:
+  python:
+    source: tools/arbitrate.py

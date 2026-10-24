@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Metric Semantics">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d4ed8"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bg)"/>
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M32 15v30"/>
+    <path d="M16 22h32"/>
+    <path d="M20 22l-6 12a7 7 0 0 0 12 0z"/>
+    <path d="M44 22l-6 12a7 7 0 0 0 12 0z"/>
+  </g>
+  <circle cx="32" cy="49" r="4" fill="#ffffff"/>
+  <g fill="#bfdbfe">
+    <rect x="27" y="8" width="10" height="3" rx="1.5"/>
+  </g>
+</svg>

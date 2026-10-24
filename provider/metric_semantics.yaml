@@ -1,0 +1,80 @@
+identity:
+  author: mrkeyoe
+  name: metric_semantics
+  label:
+    en_US: Metric Semantics
+    zh_Hans: 指标语义与口径仲裁
+  description:
+    en_US: Register metric definitions, detect caliber conflicts and arbitrate between them before Text2SQL.
+    zh_Hans: 在 Text2SQL 之前注册指标口径、检测口径冲突并给出仲裁决策信号。
+  icon: icon.svg
+  tags:
+    - productivity
+    - business
+
+credentials_for_provider:
+  store_path:
+    type: text-input
+    required: false
+    label:
+      en_US: Store path
+      zh_Hans: 数据文件路径
+    placeholder:
+      en_US: /app/storage/metrics.json
+      zh_Hans: /app/storage/metrics.json
+    help:
+      en_US: Optional JSON file used to persist definitions. Point it at a writable volume to survive restarts; defaults to ./data/metrics.json inside the plugin container.
+      zh_Hans: 可选 JSON 持久化文件路径。建议指向可写卷以避免容器重启后丢失；默认为插件目录下的 ./data/metrics.json。
+
+  model_api_base:
+    type: text-input
+    required: false
+    label:
+      en_US: Model API base (optional)
+      zh_Hans: 模型 API 地址（可选）
+    placeholder:
+      en_US: https://api.example.com/v1
+      zh_Hans: https://api.example.com/v1
+    help:
+      en_US: OpenAI-compatible endpoint. Leave empty to use the Dify model session gateway instead.
+      zh_Hans: OpenAI 兼容 endpoint。留空则改用 Dify 的模型会话网关。
+
+  model_api_key:
+    type: secret-input
+    required: false
+    label:
+      en_US: Model API key (optional)
+      zh_Hans: 模型 API Key（可选）
+
+  model_name:
+    type: text-input
+    required: false
+    label:
+      en_US: Model name (optional)
+      zh_Hans: 模型名（可选）
+    placeholder:
+      en_US: gpt-4o-mini
+      zh_Hans: gpt-4o-mini
+
+  model_provider:
+    type: text-input
+    required: false
+    label:
+      en_US: Dify model provider (optional)
+      zh_Hans: Dify 模型供应商（可选）
+    placeholder:
+      en_US: openai
+      zh_Hans: openai
+    help:
+      en_US: Only needed when relying on the Dify session gateway.
+      zh_Hans: 仅在使用 Dify 模型会话网关时需要。
+
+tools:
+  - tools/resolve_metric.yaml
+  - tools/arbitrate.yaml
+  - tools/record_outcome.yaml
+  - tools/list_metrics.yaml
+
+extra:
+  python:
+    source: provider/metric_semantics.py

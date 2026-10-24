@@ -1,0 +1,48 @@
+identity:
+  name: list_metrics
+  author: mrkeyoe
+  label:
+    en_US: List Metrics
+    zh_Hans: 列出指标口径
+
+description:
+  human:
+    en_US: List registered metrics and their calibers (optionally filtered by a keyword).
+    zh_Hans: 列出已注册的指标及其口径（可按关键词过滤）。
+
+  llm: >
+    Discovery helper. Returns registered metrics with their definition_text,
+    aliases, source tables and current confidence. Use it when the user asks what
+    metrics exist, or before suggesting a new metric registration.
+
+parameters:
+  - name: query
+    type: string
+    required: false
+    label:
+      en_US: Keyword
+      zh_Hans: 关键词
+    human_description:
+      en_US: Optional filter over id, name, aliases and definition text.
+      zh_Hans: 可选关键词，匹配 id、名称、别名与口径说明。
+    llm_description: Optional keyword filter.
+    form: llm
+
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    min: 1
+    max: 100
+    label:
+      en_US: Limit
+      zh_Hans: 返回上限
+    human_description:
+      en_US: Maximum number of metrics to return (1-100).
+      zh_Hans: 最多返回的指标数量（1-100）。
+    llm_description: Maximum number of metrics to return.
+    form: form
+
+extra:
+  python:
+    source: tools/list_metrics.py
